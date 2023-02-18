@@ -10,7 +10,7 @@ import {
 import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
 import { RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+import { AuthDto, SigninDto } from './dto';
 import { Tokens } from './types';
 
 @Controller('auth')
@@ -27,7 +27,7 @@ export class AuthController {
   @Public()
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
-  signinLocal(@Body() dto: AuthDto): Promise<Tokens> {
+  signinLocal(@Body() dto: SigninDto): Promise<Tokens> {
     return this.authService.signinLocal(dto);
   }
 

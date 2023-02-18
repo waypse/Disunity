@@ -1,11 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import * as argon from 'argon2';
 import { PrismaService } from '../prisma/prisma.service';
 
-import { AuthDto } from './dto';
+import { AuthDto, SigninDto } from './dto';
 import { JwtPayload, Tokens } from './types';
 
 @Injectable()
@@ -23,7 +24,7 @@ export class AuthService {
       .create({
         data: {
           email: dto.email,
-          name: dto.name,
+          username: dto.username,
           hash,
         },
       })
@@ -42,16 +43,27 @@ export class AuthService {
     return tokens;
   }
 
-  async signinLocal(dto: AuthDto): Promise<Tokens> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email: dto.email,
-      },
-    });
+  async signinLocal(dto: SigninDto): Promise<Tokens> {
+    let user: User;
 
-    if (!user) throw new ForbiddenException('Access Denied');
+    if (!dto.username)
+      user = await this.prisma.user.findUnique({
+        where: {
+          email: dto.email,
+        },
+      });
+    else if (!dto.email)
+      user = await this.prisma.user.findUnique({
+        where: {
+          username: dto.username,
+        },
+      });
+    else throw new ForbiddenException('Neither username nor email provided');
+
+    if (!user) throw new ForbiddenException('User not found');
 
     const passwordMatches = await argon.verify(user.hash, dto.password);
+
     if (!passwordMatches) throw new ForbiddenException('Access Denied');
 
     const tokens = await this.getTokens(user.id, user.email);
