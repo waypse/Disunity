@@ -44,9 +44,7 @@ $ npm run start:dev
 3. Run the frontend
 
 ```bash
-$ cd disunity
-
-$ cd svelte
+$ cd ../svelte
 
 $ npm install
 
