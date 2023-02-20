@@ -44,21 +44,14 @@ export class AuthService {
   }
 
   async signinLocal(dto: SigninDto): Promise<Tokens> {
-    let user: User;
+    if (!dto.identifier)
+      throw new ForbiddenException('No credentials provided');
 
-    if (!dto.username)
-      user = await this.prisma.user.findUnique({
-        where: {
-          email: dto.email,
-        },
-      });
-    else if (!dto.email)
-      user = await this.prisma.user.findUnique({
-        where: {
-          username: dto.username,
-        },
-      });
-    else throw new ForbiddenException('Neither username nor email provided');
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ email: dto.identifier }, { username: dto.identifier }],
+      },
+    });
 
     if (!user) throw new ForbiddenException('User not found');
 
@@ -73,18 +66,23 @@ export class AuthService {
   }
 
   async logout(userId: number): Promise<boolean> {
-    await this.prisma.user.updateMany({
-      where: {
-        id: userId,
-        hashedRt: {
-          not: null,
+    try {
+      await this.prisma.user.updateMany({
+        where: {
+          id: userId,
+          hashedRt: {
+            not: null,
+          },
         },
-      },
-      data: {
-        hashedRt: null,
-      },
-    });
-    return true;
+        data: {
+          hashedRt: null,
+        },
+      });
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   }
 
   async refreshTokens(userId: number, rt: string): Promise<Tokens> {
