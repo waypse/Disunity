@@ -1,5 +1,5 @@
 <script>
-  const minimize = () => {
+	const minimize = () => {
 		window.electron.send('minimize');
 	};
 
@@ -10,10 +10,16 @@
 	const close = () => {
 		window.electron.send('close');
 	};
+	$: console.log('window.electron', window);
 </script>
 
+<svelte:head>
+	<title>Disunity</title>
+	<link rel="icon" type="image/png" href="favicon.png" />
+</svelte:head>
+
 <div class="dragbar">
-	<div style:color="gray" style="padding: 0 10px;">WYSI</div>
+	<div style:color="gray" style="padding: 0 10px;">Disunity</div>
 	<div class="window-modifiers">
 		<button class="minify btn" on:click={minimize}>
 			<svg
@@ -57,7 +63,7 @@
 </div>
 
 <style>
-  .dragbar {
+	.dragbar {
 		-webkit-app-region: drag;
 		position: absolute;
 		z-index: 100;
@@ -66,7 +72,7 @@
 		background-color: rgb(29, 29, 29);
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
+		align-items: flex-start;
 		box-sizing: border-box;
 	}
 	button {
@@ -74,6 +80,11 @@
 	}
 	button:hover {
 		background-color: rgba(255, 255, 255, 0.1);
+	}
+	button:active,
+	button:focus {
+		border: none;
+		outline: none;
 	}
 	.close-window:hover {
 		background-color: rgba(255, 0, 0, 0.5);
