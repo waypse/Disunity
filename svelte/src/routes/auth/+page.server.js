@@ -1,21 +1,14 @@
-import { fail } from '@sveltejs/kit';
-
 /** @type {import('./$types').Actions} */
 export const actions = {
 	login: async ({ cookies, request }) => {
 		const data = await request.formData();
-		const [identifier, password] = [data.get('identifier'), data.get('password')];
-	},
-	register: async ({ cookies, request }) => {
-		const data = await request.formData();
-		const [email, password, username] = [
-			data.get('email'),
-			data.get('password'),
-			data.get('username'),
-		];
+		const indentifier = data.get('identifier');
+		const password = data.get('password');
 
-		if (!email || !password || !username) {
-			return fail(400, 'Missing required fields');
-		}
+		console.log('login', indentifier, password);
+		return { success: true };
+	},
+	register: async (event) => {
+		// TODO register the user
 	},
 };

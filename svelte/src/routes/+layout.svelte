@@ -1,16 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
-	import StatusBar from '$lib/components/layout/StatusBar.svelte';
 	import { goto } from '$app/navigation';
-	import { statusbar } from '$lib/stores/global.store';
-
-	export let data;
+	import StatusBar from '$lib/components/layout/StatusBar.svelte';
 
 	let ready = false;
+	export let data;
+
 	onMount(async () => {
-		$statusbar.isTransparent = false;
-		if (!data.bearer) await goto('/auth');
 		ready = true;
+		if (!data.bearer) await goto('/auth');
 	});
 </script>
 

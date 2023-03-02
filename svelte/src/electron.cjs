@@ -3,12 +3,31 @@ const contextMenu = require('electron-context-menu');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const serve = require('electron-serve');
 const path = require('path');
+const Store = require('electron-store');
 
 try {
 	require('electron-reloader')(module);
 } catch (e) {
 	console.error(e);
 }
+
+const schema = {
+	auth: {
+		type: 'object',
+		properties: {
+			access_token: {
+				type: 'string',
+				default: '',
+			},
+			access_token: {
+				type: 'string',
+				default: '',
+			},
+		},
+	},
+};
+
+const store = new Store({ schema });
 
 const serveURL = serve({ directory: '.' });
 const port = process.env.PORT || 5173;
@@ -70,6 +89,18 @@ function createWindow() {
 		mainWindow.close();
 	});
 
+	ipcMain.handle('getStoreValue', (event, key) => {
+		return store.get(key);
+	});
+
+	ipcMain.on('clearStore', (event) => {
+		store.clear();
+	});
+
+	ipcMain.on('setStoreValue', (event, key, value) => {
+		store.set(key, value);
+	});
+
 	return mainWindow;
 }
 
@@ -112,8 +143,3 @@ app.on('activate', () => {
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') app.quit();
 });
-
-ipcMain.on('to-main', (event, count) => {
-	return mainWindow.webContents.send('from-main', `next count is ${count + 1}`);
-});
-

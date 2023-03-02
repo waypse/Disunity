@@ -1,10 +1,12 @@
 <script>
-	import { onMount } from 'svelte';
-	import { statusbar } from '$lib/stores/global.store';
+	import Login from './components/Login.svelte';
+	import Register from './components/Register.svelte';
 
-	let form;
-
-	onMount(() => {
-		$statusbar.isTransparent = true;
-	});
+	let register = false;
 </script>
+
+{#if register}
+	<Register bind:register />
+{:else}
+	<Login bind:register />
+{/if}

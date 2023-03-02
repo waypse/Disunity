@@ -1,15 +1,20 @@
-<script lang="ts">
+<script>
 	import Logo from '$lib/components/Logo.svelte';
 	import { browser } from '$app/environment';
+	import { onMount } from 'svelte/types/runtime/internal/lifecycle';
+	import { statusbar } from '$lib/stores/global.store';
 
-	let desktop: string;
-
+	let desktop;
 	if (window.electron && browser) {
-		window.electron.receive('from-main', (data: any) => {
+		window.electron.receive('from-main', (data) => {
 			desktop = `Received Message "${data}" from Electron`;
 			console.log(desktop);
 		});
 	}
+
+	onMount(() => {
+		$statusbar.isTransparent = false;
+	});
 </script>
 
 <main>

@@ -2,15 +2,15 @@
 	import { statusbar } from '$lib/stores/global.store';
 
 	const minimize = () => {
-		window.electron.send('minimize');
+		window.electronApi.send('minimize');
 	};
 
 	const maximize = () => {
-		window.electron.send('maximize');
+		window.electronApi.send('maximize');
 	};
 
 	const close = () => {
-		window.electron.send('close');
+		window.electronApi.send('close');
 	};
 </script>
 
@@ -69,8 +69,6 @@
 	}
 	.app {
 		height: 100vh;
-		display: grid;
-		grid-template-rows: 20px 1fr;
 	}
 	.content {
 		height: 100%;
@@ -79,7 +77,7 @@
 		-webkit-app-region: drag;
 		position: fixed;
 		z-index: 100;
-		height: 30px;
+		height: 20px;
 		width: 100%;
 		background-color: rgb(29, 29, 29);
 		display: flex;
@@ -88,7 +86,7 @@
 		box-sizing: border-box;
 	}
 	button {
-		background-color: rgb(29, 29, 29);
+		background-color: transparent;
 	}
 	button:hover {
 		background-color: rgba(255, 255, 255, 0.1);
