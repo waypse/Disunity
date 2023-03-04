@@ -5,12 +5,16 @@
 	import { bearerToken } from '$lib/stores/global.store';
 
 	let ready = false;
-	export let data;
+	let bearer = null;
 
 	onMount(async () => {
+		const auth = await window.electronApi.auth('get');
+		if (auth && auth.access_token) {
+			bearer = auth.access_token;
+		}
 		ready = true;
-		if (!data.bearer) await goto('/auth');
-		else bearerToken.set(data.bearer);
+		if (!bearer) await goto('/auth');
+		else bearerToken.set(bearer);
 	});
 </script>
 

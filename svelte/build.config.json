@@ -4,12 +4,15 @@
 	"directories": {
 		"output": "dist"
 	},
-	"files": [
-		"electron/electron.cjs",
-		"electron/preload.cjs",
-		{
-			"from": "build",
-			"to": ""
-		}
-	]
+	"win": {
+		"target": ["nsis"],
+		"icon": "static/icon.ico"
+	},
+	"nsis": {
+		"installerIcon": "static/icon.ico",
+		"uninstallerIcon": "static/icon.ico",
+		"uninstallDisplayName": "Disunity-uninistall",
+		"oneClick": false,
+		"allowToChangeInstallationDirectory": true
+	}
 }

@@ -27,7 +27,7 @@ const env = new Store({
 	defaults: { ...process.env },
 });
 
-const serveURL = serve({ directory: '.' });
+const serveURL = serve({ directory: 'electron/build' });
 const port = process.env.PORT || 5173;
 const dev = !app.isPackaged;
 let mainWindow;
@@ -125,14 +125,14 @@ function loadVite(port) {
 	});
 }
 
-function createMainWindow() {
+async function createMainWindow() {
 	mainWindow = createWindow();
 	mainWindow.once('close', () => {
 		mainWindow = null;
 	});
 
 	if (dev) loadVite(port);
-	else serveURL(mainWindow);
+	else await serveURL(mainWindow);
 }
 
 app.once('ready', () => {

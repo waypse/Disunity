@@ -9,9 +9,9 @@ const config = {
 
 	kit: {
 		adapter: adapter({
-			fallback: 'index.html',
+			pages: './electron/build',
+			assets: './electron/build',
 		}),
-		prerender: { entries: [] },
 	},
 	optimizeDeps: {
 		include: ['electron-store'],

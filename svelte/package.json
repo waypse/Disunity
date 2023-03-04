@@ -1,18 +1,19 @@
 {
-	"name": "sveltekit-electron",
+	"name": "disunity",
 	"version": "0.0.1",
 	"private": true,
-	"description": "Minimal Sveltekit + Electron starter template.",
-	"main": "src/electron.cjs",
+	"author": "Waypse",
+	"description": "A Discord alike",
+	"main": "electron/electron.cjs",
 	"type": "module",
 	"scripts": {
 		"dev": "cross-env NODE_ENV=dev npm run dev:all",
 		"dev:all": "concurrently -n=svelte,electron -c #4F11B9,blue \"npm run dev:svelte\" \"npm run dev:electron\"",
 		"dev:svelte": "vite dev",
-		"dev:electron": "electron electron/electron.cjs",
+		"dev:electron": "electron --trace-warnings electron/electron.cjs",
 		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
 		"build:svelte": "vite build",
-		"build:electron": "electron-builder -mwl --config build.config.json",
+		"build:electron": "electron-builder --win --config build.config.json",
 		"preview": "vite preview"
 	},
 	"engines": {
@@ -28,7 +29,8 @@
 		"electron-reloader": "^1.2.3",
 		"electron-serve": "^1.1.0",
 		"electron-store": "^8.1.0",
-		"electron-window-state": "^5.0.3"
+		"electron-window-state": "^5.0.3",
+		"dotenv": "^16.0.3"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "2.0.1",
@@ -37,7 +39,6 @@
 		"@typescript-eslint/parser": "^5.53.0",
 		"concurrently": "^7.2.2",
 		"cross-env": "^7.0.3",
-		"dotenv": "^16.0.3",
 		"electron": "^21.0.0",
 		"electron-builder": "^23.1.0",
 		"electron-connect": "^0.6.3",
