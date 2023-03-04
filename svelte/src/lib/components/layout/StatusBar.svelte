@@ -2,15 +2,15 @@
 	import { statusbar } from '$lib/stores/global.store';
 
 	const minimize = () => {
-		window.electronApi.send('minimize');
+		window.electronApi.minimize();
 	};
 
 	const maximize = () => {
-		window.electronApi.send('maximize');
+		window.electronApi.maximize();
 	};
 
 	const close = () => {
-		window.electronApi.send('close');
+		window.electronApi.hide();
 	};
 </script>
 

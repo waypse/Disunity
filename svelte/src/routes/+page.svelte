@@ -1,16 +1,7 @@
 <script>
 	import Logo from '$lib/components/Logo.svelte';
-	import { browser } from '$app/environment';
-	import { onMount } from 'svelte/types/runtime/internal/lifecycle';
+	import { onMount } from 'svelte';
 	import { statusbar } from '$lib/stores/global.store';
-
-	let desktop;
-	if (window.electron && browser) {
-		window.electron.receive('from-main', (data) => {
-			desktop = `Received Message "${data}" from Electron`;
-			console.log(desktop);
-		});
-	}
 
 	onMount(() => {
 		$statusbar.isTransparent = false;
@@ -20,6 +11,14 @@
 <main>
 	<Logo />
 </main>
+
+<button
+	on:click={async () => {
+		await window.electronApi.auth('logout');
+	}}
+>
+	logout
+</button>
 
 <style>
 	:root {

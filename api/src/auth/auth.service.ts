@@ -102,6 +102,19 @@ export class AuthService {
     return tokens;
   }
 
+  async verifyAccessToken(token: string): Promise<boolean> {
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: this.config.get<string>('AT_SECRET'),
+      });
+      console.log(payload);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
   async updateRtHash(userId: number, rt: string): Promise<void> {
     const hash = await argon.hash(rt);
     await this.prisma.user.update({

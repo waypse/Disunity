@@ -13,6 +13,9 @@ const config = {
 		}),
 		prerender: { entries: [] },
 	},
+	optimizeDeps: {
+		include: ['electron-store'],
+	},
 };
 
 export default config;

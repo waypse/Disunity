@@ -1,9 +1,10 @@
 const windowStateManager = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron');
 const serve = require('electron-serve');
 const path = require('path');
 const Store = require('electron-store');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 try {
 	require('electron-reloader')(module);
@@ -11,23 +12,20 @@ try {
 	console.error(e);
 }
 
-const schema = {
-	auth: {
-		type: 'object',
-		properties: {
-			access_token: {
-				type: 'string',
-				default: '',
-			},
-			access_token: {
-				type: 'string',
-				default: '',
-			},
+const store = new Store({
+	name: 'auth',
+	defaults: {
+		auth: {
+			access_token: '',
+			refresh_token: '',
 		},
 	},
-};
+});
 
-const store = new Store({ schema });
+const env = new Store({
+	name: 'environment',
+	defaults: { ...process.env },
+});
 
 const serveURL = serve({ directory: '.' });
 const port = process.env.PORT || 5173;
@@ -42,7 +40,7 @@ function createWindow() {
 
 	const mainWindow = new BrowserWindow({
 		backgroundColor: 'rgb(29, 29, 29)',
-		titleBarStyle: 'hidden',
+		frame: false,
 		autoHideMenuBar: true,
 		trafficLightPosition: {
 			x: 17,
@@ -75,33 +73,36 @@ function createWindow() {
 		windowState.saveState(mainWindow);
 	});
 
-	ipcMain.on('maximize', (event) => {
-		if (mainWindow.isMaximized()) mainWindow.unmaximize();
-		else mainWindow.maximize();
-	});
-
-	ipcMain.on('minimize', (event) => {
-		mainWindow.minimize();
-	});
-
 	ipcMain.on('close', (event) => {
 		windowState.saveState(mainWindow);
 		mainWindow.close();
 	});
 
-	ipcMain.handle('getStoreValue', (event, key) => {
-		return store.get(key);
-	});
-
-	ipcMain.on('clearStore', (event) => {
-		store.clear();
-	});
-
-	ipcMain.on('setStoreValue', (event, key, value) => {
-		store.set(key, value);
-	});
-
 	return mainWindow;
+}
+
+function createTray() {
+	const tray = new Tray(path.join(__dirname, '../static/favicon.ico'));
+	const contextMenu = Menu.buildFromTemplate([
+		{
+			label: 'Show App',
+			click: function () {
+				mainWindow.show();
+			},
+		},
+		{
+			label: 'Quit',
+			click: function () {
+				if (process.platform !== 'darwin') app.quit();
+			},
+		},
+	]);
+
+	tray.setToolTip('This is my application.');
+	tray.setContextMenu(contextMenu);
+	tray.on('click', () => {
+		mainWindow.show();
+	});
 }
 
 contextMenu({
@@ -134,7 +135,13 @@ function createMainWindow() {
 	else serveURL(mainWindow);
 }
 
-app.once('ready', createMainWindow);
+app.once('ready', () => {
+	createMainWindow();
+
+	createTray();
+
+	require('./ipc.cjs')(app, mainWindow, store, env);
+});
 app.on('activate', () => {
 	if (!mainWindow) {
 		createMainWindow();

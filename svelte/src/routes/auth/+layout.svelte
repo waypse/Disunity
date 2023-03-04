@@ -42,5 +42,6 @@
 	}
 	.inside {
 		position: relative;
+		display: grid;
 	}
 </style>

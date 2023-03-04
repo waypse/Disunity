@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import StatusBar from '$lib/components/layout/StatusBar.svelte';
+	import { bearerToken } from '$lib/stores/global.store';
 
 	let ready = false;
 	export let data;
@@ -9,6 +10,7 @@
 	onMount(async () => {
 		ready = true;
 		if (!data.bearer) await goto('/auth');
+		else bearerToken.set(data.bearer);
 	});
 </script>
 

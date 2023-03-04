@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Headers,
   HttpCode,
   HttpStatus,
   Post,
@@ -16,6 +18,15 @@ import { Tokens } from './types';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Public()
+  @Get('verify-at')
+  @HttpCode(HttpStatus.OK)
+  verifyAccessToken(
+    @Headers('Authorization') access_token: string,
+  ): Promise<boolean> {
+    return this.authService.verifyAccessToken(access_token);
+  }
 
   @Public()
   @Post('local/signup')

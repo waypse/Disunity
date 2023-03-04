@@ -1,12 +1,12 @@
 {
 	"appId": "com.example.app",
-	"productName": "Svelte Electron",
+	"productName": "Disunity",
 	"directories": {
 		"output": "dist"
 	},
 	"files": [
-		"src/electron.cjs",
-		"src/preload.cjs",
+		"electron/electron.cjs",
+		"electron/preload.cjs",
 		{
 			"from": "build",
 			"to": ""
