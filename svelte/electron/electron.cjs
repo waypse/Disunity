@@ -82,7 +82,10 @@ function createWindow() {
 }
 
 function createTray() {
-	const tray = new Tray(path.join(__dirname, '../static/favicon.ico'));
+	let iconPath;
+	if (dev) iconPath = path.join(__dirname, '../static/favicon.ico');
+	else iconPath = path.join(__dirname, 'build/favicon.ico');
+	const tray = new Tray(iconPath);
 	const contextMenu = Menu.buildFromTemplate([
 		{
 			label: 'Show App',

@@ -14,7 +14,7 @@ const getAuth = async (store, env) => {
 
 	const res = await req.json();
 
-	if (res === true) return { access_token, refresh_token };
+	if (res === true) return access_token;
 
 	const rtReq = await fetch(`${env.get('API_ROUTE')}/auth/refresh`, {
 		method: 'POST',
@@ -29,7 +29,7 @@ const getAuth = async (store, env) => {
 	const rtRes = await rtReq.json();
 	store.set('auth', rtRes);
 
-	return rtRes;
+	return rtRes.access_token;
 };
 
 const login = async (store, env, values) => {
@@ -49,7 +49,7 @@ const login = async (store, env, values) => {
 	const tokens = await res.json();
 	store.set('auth', tokens);
 
-	return tokens;
+	return tokens.access_token;
 };
 
 const register = async (store, env, values) => {
@@ -68,7 +68,7 @@ const register = async (store, env, values) => {
 	const tokens = await res.json();
 	store.set('auth', tokens);
 
-	return tokens;
+	return tokens.access_token;
 };
 
 const logout = async (store, env) => {

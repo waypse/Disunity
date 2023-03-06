@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { statusbar } from '$lib/stores/global.store';
 	import authImage from '$lib/assets/auth_background.png';
