@@ -85,9 +85,23 @@ const logout = async (store, env) => {
 	});
 };
 
+const currentUser = async (store, env) => {
+	const req = await fetch(`${env.get('API_ROUTE')}/auth/me`, {
+		method: 'GET',
+		headers: {
+			Authorization: `Bearer ${store.get('auth.access_token')}`,
+		},
+	});
+
+	const res = await req.json();
+
+	return res;
+};
+
 module.exports = {
 	getAuth,
 	login,
 	register,
 	logout,
+	currentUser,
 };

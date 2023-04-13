@@ -4,24 +4,16 @@
 
 	const logout = async () => {
 		await window.electronApi.auth('logout');
-		await goto('/auth/login', { replaceState: true });
+		await goto('/login', { replaceState: true });
 	};
 </script>
-
-<main>
-	<Logo />
-</main>
 
 <button on:click={logout}>logout</button>
 
 <style>
-	main {
-		padding: 2em 1em 1em 1em;
-		text-align: center;
-		animation: fade 1s;
-		margin: 0 auto;
+	button {
+		margin-top: 20px;
 	}
-
 	@keyframes fade {
 		from {
 			opacity: 0;

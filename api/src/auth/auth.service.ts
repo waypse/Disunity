@@ -17,6 +17,14 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
+  me(userId: number): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+  }
+
   async signupLocal(dto: AuthDto): Promise<Tokens> {
     const hash = await argon.hash(dto.password);
 
@@ -25,6 +33,7 @@ export class AuthService {
         data: {
           email: dto.email,
           username: dto.username,
+          name: dto.username,
           hash,
         },
       })

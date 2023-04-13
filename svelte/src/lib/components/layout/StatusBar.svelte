@@ -68,12 +68,14 @@
 		background-color: transparent !important;
 	}
 	.app {
-		height: 100vh;
+		height: calc(100vh - 20px);
 	}
 	.content {
 		height: 100%;
+		margin-top: 20px;
 	}
 	.dragbar {
+		top: 0;
 		-webkit-app-region: drag;
 		position: fixed;
 		z-index: 100;
@@ -84,6 +86,7 @@
 		justify-content: space-between;
 		align-items: flex-start;
 		box-sizing: border-box;
+		margin-bottom: 20px;
 	}
 	button {
 		background-color: transparent;

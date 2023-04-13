@@ -14,10 +14,17 @@ import { RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { AuthDto, SigninDto } from './dto';
 import { Tokens } from './types';
+import { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  me(@GetCurrentUserId() userId: number): Promise<User> {
+    return this.authService.me(userId);
+  }
 
   @Public()
   @Get('verify-at')

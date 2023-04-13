@@ -10,29 +10,99 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id          Int       @default(autoincrement()) @id
-  email       String    @unique
-  username    String    @unique
-  hash        String
-  hashedRt    String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  role        Role      @default(USER)
-  profile     Profile?
+  id              Int                   @default(autoincrement()) @id
+  email           String                @unique
+  username        String                @unique
+  hash            String
+  hashedRt        String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  role            Role                  @default(USER)
+  name            String?
+  bio             String?
+  profilePicture  String?
+  banner          String?
+  birthday        DateTime?             @db.Date
+  banType         Int?                  @default(0)
+  banReason       String?
+  banExpires      DateTime?
+  followerCount   Int                   @default(0)
+  followingCount  Int                   @default(0)
+  isOnline        Boolean               @default(true)
+  follower        Follow[]              @relation("follower")
+  following       Follow[]              @relation("following")
+  posts           Post[]
+  feed            Feed[]
+  reposts         Repost[]
+  likes           Like[]                @relation("likes")
 }
 
-model Profile {
-  id          Int       @default(autoincrement()) @id
-  name        String?
-  bio         String?
-  image       String?
-  birthday    DateTime? @db.Date
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int       @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+model Follow {
+  follower        User                  @relation("follower", fields: [followerId], references: [id])
+  followerId      Int
+  following       User                  @relation("following", fields: [followingId], references: [id])
+  followingId     Int
+
+  @@id([followerId, followingId])
+}
+
+model Feed {
+  id              Int                   @default(autoincrement()) @id
+  user            User                  @relation(fields: [userId], references: [id])
+  userId          Int                   @unique
+  type            Int                   @default(1)
+  posts           Post[]
+}
+
+model Post {
+  id              Int                   @default(autoincrement()) @id
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  content         String?               @db.VarChar(300)
+  user            User                  @relation(fields: [userId], references: [id])
+  userId          Int
+  guildId         Int?
+  parent          ParentChildComment[]  @relation("parent_comment")
+  child           ParentChildComment[]  @relation("child_comment")
+  feed            Feed[]
+  reposts         Repost[]
+  likesCount      Int                   @default(0)
+  repostsCount    Int                   @default(0)
+  commentsCount   Int                   @default(0)
+  likes           Like[]                @relation("likes")
+  isOnline        Boolean               @default(true)
+}
+
+model Like {
+  user            User                  @relation("likes", fields: [userId], references: [id])
+  userId          Int
+  post            Post                  @relation("likes", fields: [postId], references: [id])
+  postId          Int
+
+  @@id([userId, postId])
+}
+
+model Repost {
+  id              Int                   @default(autoincrement()) @id
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  content         String?               @db.VarChar(300)
+  user            User                  @relation(fields: [userId], references: [id])
+  userId          Int
+  post            Post                  @relation(fields: [postId], references: [id])
+  postId          Int
+  haveContent     Boolean               @default(false)
+  isOnline        Boolean               @default(true)
+}
+
+model ParentChildComment {
+  parent          Post                  @relation("parent_comment", fields: [parentId], references: [id])
+  parentId        Int
+  child           Post                  @relation("child_comment", fields: [childId], references: [id])
+  childId         Int
+
+  @@id([parentId, childId])
 }
 
 enum Role {

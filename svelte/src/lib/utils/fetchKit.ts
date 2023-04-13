@@ -12,7 +12,7 @@ const STATUS_CODES_OK = [200, 201, 202];
 const MAX_RETRIES = 3;
 const DELAY_BETWEEN_CALLS = 200;
 
-const baseUrl = `${import.meta.env.PUBLIC_ROUTE}`;
+const baseUrl = `http://localhost:3333`;
 
 export async function fetchKit(
 	endpoint: string,

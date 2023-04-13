@@ -1,5 +1,5 @@
 const { ipcMain: ipc, dialog } = require('electron');
-const { getAuth, login, logout, register } = require('../ipc-methods/auth.cjs');
+const { getAuth, login, logout, register, currentUser } = require('../ipc-methods/auth.cjs');
 const shell = require('electron').shell;
 
 /*
@@ -37,4 +37,5 @@ module.exports = (app, win, store, env) => {
 	ipc.handle('auth:logout', () => logout(store, env));
 	ipc.handle('auth:login', (_event, values) => login(store, env, values));
 	ipc.handle('auth:register', (_event, values) => register(store, env, values));
+	ipc.handle('auth:current-user', () => currentUser(store, env));
 };

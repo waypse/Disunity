@@ -39,7 +39,7 @@ function createWindow() {
 	});
 
 	const mainWindow = new BrowserWindow({
-		backgroundColor: 'rgb(29, 29, 29)',
+		backgroundColor: '#151619',
 		frame: false,
 		autoHideMenuBar: true,
 		trafficLightPosition: {
